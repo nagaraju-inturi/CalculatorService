@@ -7,14 +7,20 @@ def run(task="ping", payload=""):
     with grpc.insecure_channel("localhost:50051") as channel:
         stub = calculator_pb2_grpc.CalculatorServiceStub(channel)
         if task.lower() == "ping":
-            response = stub.SendPing(calculator_pb2.Ping(count=1))
-            print (f"Ping response: {response.count}")
+            try:
+                response = stub.SendPing(calculator_pb2.Ping(count=1))
+                print (f"Ping response: {response.count}")
+            except grpc.RpcError as e:
+                print(f"Error in receiving ping message: {e}")
         elif payload != "":
-            response = stub.SendRequest(calculator_pb2.Payload(payload=payload))
-            if response.error_code:
-                print (f"Error returned from calculator service. Error code={response.error_code}, message={response.error_message}")
-            else:
-                print (f"Result={response.result}")
+            try:
+                response = stub.SendRequest(calculator_pb2.Payload(payload=payload))
+                if response.error_code:
+                    print (f"Error returned from calculator service. Error code={response.error_code}, message={response.error_message}")
+                else:
+                    print (f"Result={response.result}")
+            except grpc.RpcError as e:
+                print(f"Error in receiving calculator task response: {e}")
         else:
             print ("Invalid input")
 if __name__ == "__main__":
