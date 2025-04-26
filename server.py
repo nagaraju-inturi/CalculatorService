@@ -3,6 +3,8 @@ from concurrent import futures
 import calculator_pb2
 import calculator_pb2_grpc
 from calculatorTask import CalculatorTask
+from grpc import StatusCode
+
 
 class CalculatorServiceServicer(calculator_pb2_grpc.CalculatorServiceServicer):
     def SendRequest(self, request, context):
@@ -10,7 +12,7 @@ class CalculatorServiceServicer(calculator_pb2_grpc.CalculatorServiceServicer):
             res = CalculatorTask().calculate(request.payload)
             return calculator_pb2.Result(result=str(res))
         except Exception as e:
-            return calculator_pb2.Result(error_code=400, error_message=str(e))
+            context.abort(StatusCode.INVALID_ARGUMENT, str(e))
     def SendPing(self, request, context):
         return calculator_pb2.Ping(count=request.count+1)
     

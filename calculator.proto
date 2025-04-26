@@ -1,4 +1,4 @@
-// python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. calculator.proto
+// python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. calculator.proto
 syntax = "proto3";
 
 message Payload {
@@ -11,8 +11,6 @@ message Ping {
 
 message Result {
     string result=1;
-    int32  error_code=2;
-    string error_message=3;
 }
 
 service CalculatorService {

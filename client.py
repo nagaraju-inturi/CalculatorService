@@ -15,10 +15,7 @@ def run(task="ping", payload=""):
         elif payload != "":
             try:
                 response = stub.SendRequest(calculator_pb2.Payload(payload=payload))
-                if response.error_code:
-                    print (f"Error returned from calculator service. Error code={response.error_code}, message={response.error_message}")
-                else:
-                    print (f"Result={response.result}")
+                print (f"Result={response.result}")
             except grpc.RpcError as e:
                 print(f"Error in receiving calculator task response: {e}")
         else:
